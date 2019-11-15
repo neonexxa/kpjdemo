@@ -1,0 +1,99 @@
+</!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% if page_autrefresh %}
+    <!-- <meta http-equiv="Refresh" content="20">  -->
+    {% endif %}
+	<title>{% block title %}{% endblock %}</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://khairulazry.github.io/azry-icon/scss/style.css">
+	<style>
+		body{
+			background-image: url('https://media.discordapp.net/attachments/572616074642718720/644347156060176393/KPJ_Background.png');
+			background-repeat: no-repeat;
+			background-size:  cover;
+		}
+	</style>
+	{% block page_style %}{% endblock %}	
+</head>
+<body>
+	{% block page_content %}{% endblock %}	
+
+	<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js" integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous"></script>
+	<script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-firestore.js"></script>
+
+	<script>
+		function getCookie(cname) {
+		  var name = cname + "=";
+		  var ca = document.cookie.split(';');
+		  for(var i = 0; i < ca.length; i++) {
+		    var c = ca[i];
+		    while (c.charAt(0) == ' ') {
+		      c = c.substring(1);
+		    }
+		    if (c.indexOf(name) == 0) {
+		      return c.substring(name.length, c.length);
+		    }
+		  }
+		  return "";
+		}
+
+		var url = new URL(window.location.href);
+		var roomno = url.searchParams.get("roomno");
+		// const firebase = require("firebase");
+		// // Required for side-effects
+		// require("firebase/firestore");
+		var firebaseConfig = {
+			apiKey: "AIzaSyAzXGFQz2-lNRmRgmGPo6Unty3DCr7Aqc8",
+			authDomain: "kpjtawakal.firebaseapp.com",
+			databaseURL: "https://kpjtawakal.firebaseio.com",
+			projectId: "kpjtawakal",
+			storageBucket: "kpjtawakal.appspot.com",
+			messagingSenderId: "645905493196",
+			appId: "1:645905493196:web:013898d390a5fca74ba669"
+		};
+		// Initialize Firebase
+		firebase.initializeApp(firebaseConfig);
+		var db = firebase.firestore();
+		db.collection("navigation").doc(roomno).onSnapshot(function(doc) {
+			console.log("Current data: ", doc.data().currentpage);
+			var currentpage = getCookie("currentpage");
+			if (currentpage != doc.data().currentpage) {
+				document.cookie = "currentpage="+doc.data().currentpage;
+				switch(doc.data().currentpage) {
+		        	case "home.menu":
+		        		window.location.replace('/home_menu?roomno='+roomno)
+		        		break;
+				    case "menu.doctor":
+				    	window.location.replace('/menu_doctor?roomno='+roomno)
+				    	break;
+				    case "menu.doctor.calling":
+				    	window.location.replace('/menu_doctor_calling?roomno='+roomno)
+				    	break;
+				    case "menu.doctor.mytreatment":
+				    	window.location.replace('/menu_doctor_mytreatment?roomno='+roomno)
+				    	break;
+				    case "menu.doctor.myprofile":
+				    	window.location.replace('/menu_doctor_myprofile?roomno='+roomno)
+				    	break;
+				    case "menu.tv":
+				    	window.location.replace('/menu_tv?roomno='+roomno)
+				    	break;
+				  default:
+				    // code block
+				}
+			}
+	    });
+
+	</script>
+	{% block page_script %}{% endblock %}
+</body>
+</html>
